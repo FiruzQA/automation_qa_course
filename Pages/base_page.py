@@ -20,7 +20,7 @@ class BasePage:
     def element_is_present(self, locator, timeout=5):
         return wait(self.driver, timeout).until(EC.presence_of_element_located(locator))
 
-    def element_are_present(self, locator, timeout=5):
+    def elements_are_present(self, locator, timeout=5):
         return wait(self.driver, timeout).until(EC.presence_of_all_elements_located(locator))
 
     def element_is_not_visible(self, locator, timeout=5):
@@ -41,3 +41,22 @@ class BasePage:
         action = ActionChains(self.driver)
         action.context_click(element)
         action.perform()
+
+    def action_click(self, element):
+        action = ActionChains(self.driver)
+        action.click(element)
+        action.perform()
+
+    def action_send_keys(self, element):
+        action = ActionChains(self.driver)
+        action.send_keys_to_element(element)
+        action.perform()
+
+    def remove_footer(self):
+        self.driver.execute_script("document.getElementsByTagName('footer')[0].remove();")
+        self.driver.execute_script("document.getElementById('close-fixedban').remove();")
+        self.driver.execute_script("document.getElementById('adplus-anchor').remove()")
+
+    def reduce_screen_size(self):
+        self.driver.execute_script("document.body.style.zoom = '0.8'")
+

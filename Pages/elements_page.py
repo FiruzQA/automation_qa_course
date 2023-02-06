@@ -1,16 +1,14 @@
 import base64
 import os
 import time
-
 import requests
+from selenium.common import TimeoutException
 from selenium.webdriver import Keys
 import random
-
 from selenium.webdriver.common.by import By
-
 from generator.generator import generated_person, generated_file
 from locators.elements_page_locators import TextBoxPageLocators, WebTablePageLocators, ButtonsPageLocators, \
-    LinksPageLocators, UploadAndDownloadPageLocators
+    LinksPageLocators, UploadAndDownloadPageLocators, DynamicPropertiesPageLocators
 from Pages.base_page import BasePage
 from locators.elements_page_locators import CheckBoxPageLocators
 from locators.elements_page_locators import RadioButtonPageLocators
@@ -60,7 +58,7 @@ class CheckBoxPage(BasePage):
                 break
 
     def get_checked_checkboxes(self):
-        checked_list = self.element_are_present(self.locators.CHECKED_ITEMS)
+        checked_list = self.elements_are_present(self.locators.CHECKED_ITEMS)
         data = []
         for box in checked_list:
             title_item = box.find_element(By.XPATH, self.locators.TITLE_ITEM)
@@ -68,7 +66,7 @@ class CheckBoxPage(BasePage):
         return str(data).replace(' ', '').replace('doc', '').replace('.', '').lower()
 
     def get_output_result(self):
-        result_list = self.element_are_present(self.locators.OUTPUT_RESULT)
+        result_list = self.elements_are_present(self.locators.OUTPUT_RESULT)
         data = []
         for item in result_list:
             data.append(item.text)
@@ -114,7 +112,7 @@ class WebTablePage(BasePage):
             return [firstname, lastname, str(age), email, str(salary), department]
 
     def check_new_added_person(self):
-        people_list = self.element_are_present(self.locators.FULL_PEOPLE_LIST)
+        people_list = self.elements_are_present(self.locators.FULL_PEOPLE_LIST)
         data = []
         for item in people_list:
             data.append(item.text.splitlines())
@@ -144,6 +142,7 @@ class WebTablePage(BasePage):
         return self.element_is_present(self.locators.NO_ROWS_FOUND).text
 
     def select_up_to_some_rows(self):
+        self.remove_footer()
         count = [5, 10, 20, 25, 50, 100]
         data = []
         for x in count:
@@ -155,7 +154,7 @@ class WebTablePage(BasePage):
         return data
 
     def check_count_rows(self):
-        list_rows = self.element_are_present(self.locators.FULL_PEOPLE_LIST)
+        list_rows = self.elements_are_present(self.locators.FULL_PEOPLE_LIST)
         return len(list_rows)
 
 
@@ -223,3 +222,24 @@ class UploadAndDownloadPage(BasePage):
             f.close()
             os.remove(path_name_file)
         return check_file
+
+
+class DynamicPropertiesPage(BasePage):
+    locators = DynamicPropertiesPageLocators()
+
+    def check_enable_button(self):
+        enable_button = self.element_is_clickable(self.locators.ENABLE_BUTTON, 1).click()
+
+    def check_change_of_color(self):
+        color_button = self.element_is_present(self.locators.COLOR_CHANGE_BUTTON)
+        color_button_before = color_button.value_of_css_property('color')
+        time.sleep(5)
+        color_button_after = color_button.value_of_css_property('color')
+        return color_button_before, color_button_after
+
+    def check_appear_button(self):
+        try:
+            self.element_is_visible(self.locators.VISIBLE_AFTER_FIVE_SEC_BUTTON)
+        except TimeoutException:
+            return False
+        return True
