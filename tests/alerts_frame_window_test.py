@@ -1,6 +1,7 @@
 import time
 
-from Pages.alerts_frame_window_page import BrowserWindowsPage, AlertsPage, FramesPage, NestedFramesPage
+from Pages.alerts_frame_window_page import BrowserWindowsPage, AlertsPage, FramesPage, NestedFramesPage, \
+    ModalDialogsPage
 
 
 class TestAlertsFrameWindow:
@@ -64,3 +65,13 @@ class TestAlertsFrameWindow:
             parent_text, child_text = nested_frame_page.check_nested_frame()
             assert parent_text == 'Parent frame'
             assert child_text == 'Child Iframe'
+
+    class TestModalDialogs:
+
+        def test_modal_dialogs(self, driver):
+            modal_dialog_page = ModalDialogsPage(driver, "https://demoqa.com/modal-dialogs")
+            modal_dialog_page.open()
+            small, large = modal_dialog_page.check_model_dialogs()
+            assert small[1] < large[1]
+            assert small[0] == 'Small Modal'
+            assert large[0] == 'Large Modal'
