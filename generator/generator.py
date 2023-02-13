@@ -1,8 +1,9 @@
-from data.data import Person, Colour
+from data.data import Person, Colour, Date
 from faker import Faker
 import random
 
 faker_ru = Faker('ru_Ru')
+faker_en = Faker('En')
 Faker.seed()
 
 
@@ -31,4 +32,12 @@ def generated_file():
 def generated_colour():
     yield Colour(
         colour_name=["Red", "Blue", "Green", "Yellow", "Purple", "Black", "White", "Voilet", "Indigo", "Magenta", "Aqua"]
+    )
+
+def generated_date():
+    yield Date(
+        year=faker_en.year(),
+        month=faker_en.month_name(),
+        day=faker_en.day_of_month(),
+        time="12:00"
     )

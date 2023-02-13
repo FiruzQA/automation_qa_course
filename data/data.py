@@ -17,3 +17,10 @@ class Person:
 @dataclass
 class Colour:
     colour_name: list = None
+
+@dataclass
+class Date:
+    day: str = None
+    month: str = None
+    year: str = None
+    time: str = None
