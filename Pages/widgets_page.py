@@ -8,7 +8,7 @@ from selenium.webdriver.support.select import Select
 from Pages.base_page import BasePage
 from generator.generator import generated_colour, generated_date
 from locators.widgets_page_locators import AccordianPageLocators, AutoCompletePageLocators, DataPickerPageLocators, \
-    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolsTipsPageLocators
+    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolsTipsPageLocators, MenuPageLocators
 
 
 class AccordianPage(BasePage):
@@ -177,3 +177,14 @@ class ToolsTipsPage(BasePage):
         tool_tip_text_section = self.get_text_from_tool_tips(self.locators.SECTION_LINK,
                                                              self.locators.TOOL_TIP_SECTION_LINK)
         return tool_tip_text_button, tool_tip_text_field, tool_tip_text_contrary, tool_tip_text_section
+
+class MenuPage(BasePage):
+    locators = MenuPageLocators()
+
+    def check_menu(self):
+        menu_item_list = self.elements_are_present(self.locators.MENU_ITEM_LIST)
+        data = []
+        for item in menu_item_list:
+            self.action_move_to_element(item)
+            data.append(item.text)
+        return data
