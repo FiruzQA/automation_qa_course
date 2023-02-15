@@ -64,6 +64,11 @@ class BasePage:
         action.move_to_element(element)
         action.perform()
 
+    def action_drag_and_drop(self, what, where):
+        action = ActionChains(self.driver)
+        action.drag_and_drop(what, where)
+        action.perform()
+
     def remove_footer(self):
         self.driver.execute_script("document.getElementsByTagName('footer')[0].remove();")
         self.driver.execute_script("document.getElementById('close-fixedban').remove();")
